@@ -2,14 +2,9 @@ import { Fragment } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import logo from '../assets/logo.jpg'
-import hand from '../assets/hand.jpg'
 import { NavLink, Outlet } from 'react-router-dom'
+import { userStateContext } from '../contexts/ContextProvider'
 
-const user = {
-  name: 'Amaia Galvez',
-  email: 'amaiagalvez@hotmail.com',
-  imageUrl: hand,
-}
 const navigation = [
   { name: 'Dashboard', to: '/dashboard', current: true },
   { name: 'Surveys', to: '/surveys', current: false },
@@ -24,9 +19,10 @@ function classNames(...classes) {
 }
 
 export default function AuthLayout() {
+  const { currentUser } = userStateContext()
 
   const logout = (ev) => {
-    ev.preventDefault();
+    ev.preventDefault()
     console.log('logout')
   }
 
@@ -82,7 +78,7 @@ export default function AuthLayout() {
                         <div>
                           <Menu.Button className="flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                             <span className="sr-only">Open user menu</span>
-                            <img className="h-8 w-8 rounded-full" src={user.imageUrl} alt="" />
+                            <img className="h-8 w-8 rounded-full" src={currentUser.imageUrl} alt="" />
                           </Menu.Button>
                         </div>
                         <Transition
@@ -160,11 +156,11 @@ export default function AuthLayout() {
                 <div className="border-t border-gray-700 pt-4 pb-3">
                   <div className="flex items-center px-5">
                     <div className="flex-shrink-0">
-                      <img className="h-10 w-10 rounded-full" src={user.imageUrl} alt="" />
+                      <img className="h-10 w-10 rounded-full" src={currentUser.imageUrl} alt="" />
                     </div>
                     <div className="ml-3">
-                      <div className="text-base font-medium leading-none text-white">{user.name}</div>
-                      <div className="text-sm font-medium leading-none text-gray-400">{user.email}</div>
+                      <div className="text-base font-medium leading-none text-white">{currentUser.name}</div>
+                      <div className="text-sm font-medium leading-none text-gray-400">{currentUser.email}</div>
                     </div>
                     <button
                       type="button"
