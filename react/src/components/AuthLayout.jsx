@@ -2,25 +2,21 @@ import { Fragment } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import logo from '../assets/logo.jpg'
-import { Outlet } from 'react-router-dom'
+import hand from '../assets/hand.jpg'
+import { NavLink, Outlet } from 'react-router-dom'
 
 const user = {
-  name: 'Tom Cook',
-  email: 'tom@example.com',
-  imageUrl:
-    'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+  name: 'Amaia Galvez',
+  email: 'amaiagalvez@hotmail.com',
+  imageUrl: hand,
 }
 const navigation = [
-  { name: 'Dashboard', href: '#', current: true },
-  { name: 'Team', href: '#', current: false },
-  { name: 'Projects', href: '#', current: false },
-  { name: 'Calendar', href: '#', current: false },
-  { name: 'Reports', href: '#', current: false },
+  { name: 'Dashboard', to: '/dashboard', current: true },
+  { name: 'Surveys', to: '/surveys', current: false },
 ]
 const userNavigation = [
   { name: 'Your Profile', href: '#' },
-  { name: 'Settings', href: '#' },
-  { name: 'Sign out', href: '#' },
+  { name: 'Settings', href: '#' }
 ]
 
 function classNames(...classes) {
@@ -28,6 +24,12 @@ function classNames(...classes) {
 }
 
 export default function AuthLayout() {
+
+  const logout = (ev) => {
+    ev.preventDefault();
+    console.log('logout')
+  }
+
   return (
     <>
       <div className="min-h-full">
@@ -38,28 +40,29 @@ export default function AuthLayout() {
                 <div className="flex h-16 items-center justify-between">
                   <div className="flex items-center">
                     <div className="flex-shrink-0">
-                      <img
-                        className="h-10 w-10 rounded-3xl"
-                        src={logo}
-                        alt="Urretxu"
-                      />
+                      <a href="/">
+                        <img
+                          className="h-10 w-10 rounded-3xl"
+                          src={logo}
+                          alt="Urretxu"
+                        />
+                      </a>
                     </div>
                     <div className="hidden md:block">
                       <div className="ml-10 flex items-baseline space-x-4">
                         {navigation.map((item) => (
-                          <a
+                          <NavLink
                             key={item.name}
-                            href={item.href}
-                            className={classNames(
-                              item.current
+                            to={item.to}
+                            className={({ isActive }) => classNames(
+                              isActive
                                 ? 'bg-gray-900 text-white'
                                 : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                               'px-3 py-2 rounded-md text-sm font-medium'
                             )}
-                            aria-current={item.current ? 'page' : undefined}
                           >
                             {item.name}
-                          </a>
+                          </NavLink>
                         ))}
                       </div>
                     </div>
@@ -107,6 +110,19 @@ export default function AuthLayout() {
                                 )}
                               </Menu.Item>
                             ))}
+
+                            <Menu.Item>
+                              <a
+                                href="#"
+                                onClick={(ev) => logout(ev)}
+                                className={classNames(
+                                  'block px-4 py-2 text-sm text-gray-700'
+                                )}
+                              >
+                                Logout
+                              </a>
+                            </Menu.Item>
+
                           </Menu.Items>
                         </Transition>
                       </Menu>
@@ -129,18 +145,16 @@ export default function AuthLayout() {
               <Disclosure.Panel className="md:hidden">
                 <div className="space-y-1 px-2 pt-2 pb-3 sm:px-3">
                   {navigation.map((item) => (
-                    <Disclosure.Button
+                    <NavLink
                       key={item.name}
-                      as="a"
-                      href={item.href}
-                      className={classNames(
-                        item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                      to={item.to}
+                      className={({ isActive }) => classNames(
+                        isActive ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                         'block px-3 py-2 rounded-md text-base font-medium'
                       )}
-                      aria-current={item.current ? 'page' : undefined}
                     >
                       {item.name}
-                    </Disclosure.Button>
+                    </NavLink>
                   ))}
                 </div>
                 <div className="border-t border-gray-700 pt-4 pb-3">
@@ -171,6 +185,17 @@ export default function AuthLayout() {
                         {item.name}
                       </Disclosure.Button>
                     ))}
+
+                    <Disclosure.Button
+                      href="#"
+                      as="a"
+                      onClick={(ev) => logout(ev)}
+                      className={classNames(
+                        'block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white'
+                      )}
+                    >
+                      Logout
+                    </Disclosure.Button>
                   </div>
                 </div>
               </Disclosure.Panel>

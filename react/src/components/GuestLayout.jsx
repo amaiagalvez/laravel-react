@@ -8,7 +8,7 @@ export default function GuestLayout() {
         <div className="w-full max-w-md space-y-8">
           <div>
             <img
-              className="mx-auto h-24 w-auto rounded-3xl"
+              className="mx-auto h-24 w-auto rounded-full"
               src={logo}
               alt="Urretxu"
             />
