@@ -1,5 +1,4 @@
 import { createContext, useContext, useState } from "react";
-import hand from '../assets/hand.jpg'
 
 const StateContext = createContext({
   currentUser: {},
@@ -11,7 +10,7 @@ const StateContext = createContext({
 const tmpSurveys = [
   {
     "id": 1,
-    "image_url": "https://picsum.photos/200/500",
+    "image_url": "https://picsum.photos/500/500",
     "title": "TheCodeholic YouTube channel",
     "slug": "thecodeholic-youtube-channel",
     "status": true,
@@ -152,7 +151,7 @@ const tmpSurveys = [
   },
   {
     "id": 2,
-    "image_url": "https://picsum.photos/200/300",
+    "image_url": "https://picsum.photos/500/300",
     "title": "React",
     "slug": "react",
     "status": true,
@@ -164,7 +163,7 @@ const tmpSurveys = [
   },
   {
     "id": 3,
-    "image_url": "https://picsum.photos/200/400",
+    "image_url": "https://picsum.photos/500/400",
     "title": "Laravel 9",
     "slug": "laravel-9",
     "status": true,
@@ -177,14 +176,19 @@ const tmpSurveys = [
 ]
 
 export const ContextProvider = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState({
-    name: 'Amaia Galvez',
-    email: 'amaiagalvez@hotmail.com',
-    imageUrl: hand,
-  })
-
-  const [userToken, setUserToken] = useState('todo_null_jarri') //TODO: null jarri
+  const [currentUser, setCurrentUser] = useState({})
+  const [userToken, _setUserToken] = useState(localStorage.getItem('TOKEN') || null)
   const [surveys, setSurveys] = useState(tmpSurveys)
+
+  const setUserToken = (token) => {
+    if (token) {
+      localStorage.setItem('TOKEN', token)
+    } else {
+      localStorage.removeItem('TOKEN')
+    }
+
+    _setUserToken(token);
+  }
 
   return (
     <StateContext.Provider value={{

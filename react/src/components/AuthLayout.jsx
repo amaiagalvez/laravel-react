@@ -1,9 +1,11 @@
 import { Fragment } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import { Navigate, NavLink, Outlet } from 'react-router-dom'
+import { Link, Navigate, NavLink, Outlet } from 'react-router-dom'
 import { UseStateContext } from '../contexts/ContextProvider'
 import logo from '../assets/logo.jpg'
+import { UserCircleIcon } from '@heroicons/react/20/solid'
+import axiosClient from '../axios'
 
 const navigation = [
   { name: 'Dashboard', to: '/dashboard', current: true },
@@ -19,7 +21,7 @@ function classNames(...classes) {
 }
 
 export default function AuthLayout() {
-  const { currentUser, userToken } = UseStateContext()
+  const { currentUser, setCurrentUser, userToken, setUserToken } = UseStateContext()
 
   if (!userToken) {
     return <Navigate to='login' />
@@ -27,7 +29,11 @@ export default function AuthLayout() {
 
   const logout = (ev) => {
     ev.preventDefault()
-    console.log('logout')
+    axiosClient.post('/logout')
+      .then(res => {
+        setCurrentUser({})
+        setUserToken(null)
+      });
   }
 
   return (
@@ -82,7 +88,7 @@ export default function AuthLayout() {
                         <div>
                           <Menu.Button className="flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                             <span className="sr-only">Open user menu</span>
-                            <img className="h-8 w-8 rounded-full" src={currentUser.imageUrl} alt="" />
+                            <UserCircleIcon className="h-8 w-8 rounded-full text-gray-500" />
                           </Menu.Button>
                         </div>
                         <Transition
@@ -95,6 +101,10 @@ export default function AuthLayout() {
                           leaveTo="transform opacity-0 scale-95"
                         >
                           <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                            <div className="py-2 px-2 ml-3">
+                              <div className="text-base font-small leading-none text-gray-500">{currentUser.name}</div>
+                              <div className="text-sm font-small leading-none text-gray-500">{currentUser.email}</div>
+                            </div>
                             {userNavigation.map((item) => (
                               <Menu.Item key={item.name}>
                                 {({ active }) => (
@@ -112,15 +122,19 @@ export default function AuthLayout() {
                             ))}
 
                             <Menu.Item>
-                              <a
+                              <Link
                                 href="#"
-                                onClick={(ev) => logout(ev)}
+                                onClick={(ev) => {
+                                  if (window.confirm('Are you sure you wish to close application?'))
+                                    logout(ev)
+                                }
+                                }
                                 className={classNames(
                                   'block px-4 py-2 text-sm text-gray-700'
                                 )}
                               >
                                 Logout
-                              </a>
+                              </Link>
                             </Menu.Item>
 
                           </Menu.Items>
@@ -160,7 +174,7 @@ export default function AuthLayout() {
                 <div className="border-t border-gray-700 pt-4 pb-3">
                   <div className="flex items-center px-5">
                     <div className="flex-shrink-0">
-                      <img className="h-10 w-10 rounded-full" src={currentUser.imageUrl} alt="" />
+                      <UserCircleIcon className="h-8 w-8 rounded-full text-gray-500" />
                     </div>
                     <div className="ml-3">
                       <div className="text-base font-medium leading-none text-white">{currentUser.name}</div>
